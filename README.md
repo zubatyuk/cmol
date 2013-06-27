@@ -28,7 +28,7 @@ This will produce some files:
 * For each MyStructure-d???.xyz run:
 <pre><code>mkinps-orca-dim.py MyStructure-d001.xyz
 </code></pre>
-Look at line 44 of the script to change computational method.
+Look at line 15 of the script to change computational method.
 
 The script will produce impuut files for BSSE corrected ORCA calculations. 
 
