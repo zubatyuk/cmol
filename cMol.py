@@ -212,6 +212,8 @@ class cMol(object):
             #user mode
             for s in symops:
                 for a in self.atoms:
+                    if a.GetVector() == s.apply(a.GetVector()):
+                        continue
                     atom=ob.OBAtom()
                     atom.SetVector(self.f2c(s.apply(self.c2f(a.GetVector()))))
                     atom.SetAtomicNum(a.GetAtomicNum())
