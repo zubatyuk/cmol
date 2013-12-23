@@ -49,9 +49,11 @@ Start with `MyStructure.cif`
 
   The script will read CIF file, normalize positions of hydrogen atoms (C-H: 1.089, N-H: 1.015, O-H: 0.993), find and for each symmetry unique molecule will calculate its first coordination sphere. Will output
 
-    * `MyStructure-s##.xyz` - geometry of first coordination sphere for each symmetry unique molecule
-    * `MyStructure-d###.xyz` - geometry of dimers (base molecule + neighbiring molecule)
-    * `MyStructure.symm` -  each line contains symmemetry operation and IDs of base and symmetry related molecule for all molecules from first coordination sphere (defined as all molecule which have contacs with base molecule within sum of VdW radii + 1A).
+  `MyStructure.symm` -  each line contains symmemetry operation and IDs of base and symmetry related molecule for all molecules from first coordination sphere (defined as all molecule which have contacs with base molecule within sum of VdW radii + 1A).
+
+  `MyStructure-s##.xyz` - geometry of first coordination sphere for each symmetry unique molecule
+
+  `MyStructure-d###.xyz` - geometry of dimers (base molecule + neighbiring molecule)
 
 ####Perform quantum-chemical calculations of interaction energies
 
