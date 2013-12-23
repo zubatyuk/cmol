@@ -51,7 +51,7 @@ Start with `MyStructure.cif`
 
     * `MyStructure-s##.xyz` - geometry of first coordination sphere for each symmetry unique molecule
     * `MyStructure-d###.xyz` - geometry of dimers (base molecule + neighbiring molecule)
-    * `MyStructure.symm` - symmetry information and indexes of linked molecules
+    * `MyStructure.symm` -  each line contains symmemetry operation and IDs of base and symmetry related molecule for all molecules from first coordination sphere (defined as all molecule which have contacs with base molecule within sum of VdW radii + 1A).
 
 ####Perform quantum-chemical calculations of interaction energies
 
