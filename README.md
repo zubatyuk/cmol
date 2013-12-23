@@ -7,15 +7,15 @@ Energy Vector Diagram method provides _ab initio_ methodology for analysis of in
 
 For details see:
 
-  Dyakonenko, Viktoriya V., Andrey V. Maleev, Alexander I. Zbruyev, Valentin A. Chebanov, Sergey M. Desenko, and Oleg V. Shishkin. 2010. “Layered Crystal Structure of Bicyclic Aziridines as Revealed by Analysis of Intermolecular Interactions Energy.” _CrystEngComm_ 12 (6): 1816. doi:10.1039/b922131j. [http://xlink.rsc.org/?DOI=b922131j].
+  [Dyakonenko, Viktoriya V., Andrey V. Maleev, Alexander I. Zbruyev, Valentin A. Chebanov, Sergey M. Desenko, and Oleg V. Shishkin. 2010. “Layered Crystal Structure of Bicyclic Aziridines as Revealed by Analysis of Intermolecular Interactions Energy.” _CrystEngComm_ 12 (6): 1816. doi:10.1039/b922131j.](http://xlink.rsc.org/?DOI=b922131j)
 
-  Shishkin, Oleg V., Volodymyr V. Medvediev, Roman I. Zubatyuk, Olena O. Shyshkina, Nataliya V. Kovalenko, and Julian M. Volovenko. 2012. “Role of Different Molecular Fragments in Formation of the Supramolecular Architecture of the Crystal of 1,1-Dioxo-Tetrahydro-1λ6-Thiopyran-3-One.” _CrystEngComm_ 14 (24): 8698. doi:10.1039/c2ce26332g. [http://xlink.rsc.org/?DOI=c2ce26332g].
+  [Shishkin, Oleg V., Volodymyr V. Medvediev, Roman I. Zubatyuk, Olena O. Shyshkina, Nataliya V. Kovalenko, and Julian M. Volovenko. 2012. “Role of Different Molecular Fragments in Formation of the Supramolecular Architecture of the Crystal of 1,1-Dioxo-Tetrahydro-1λ6-Thiopyran-3-One.” _CrystEngComm_ 14 (24): 8698. doi:10.1039/c2ce26332g.](http://xlink.rsc.org/?DOI=c2ce26332g)
 
-  Yufit, Dmitry S., Roman Zubatyuk, Oleg V. Shishkin, and Judith a. K. Howard. 2012. “Low-Melting Molecular Complexes. Halogen Bonds in Molecular Complexes of Bromoform.” _CrystEngComm_ 14 (23): 8222. doi:10.1039/c2ce26191j. [http://xlink.rsc.org/?DOI=c2ce26191j].
+  [Yufit, Dmitry S., Roman Zubatyuk, Oleg V. Shishkin, and Judith a. K. Howard. 2012. “Low-Melting Molecular Complexes. Halogen Bonds in Molecular Complexes of Bromoform.” _CrystEngComm_ 14 (23): 8222. doi:10.1039/c2ce26191j.](http://xlink.rsc.org/?DOI=c2ce26191j)
 
-  Shishkin, Oleg V., Volodymyr V. Medvediev, and Roman I. Zubatyuk. 2013. “Supramolecular Architecture of Molecular Crystals Possessing Shearing Mechanical Properties: Columns Versus Layers.” _CrystEngComm_ 15 (1): 160. doi:10.1039/c2ce26126j. [http://xlink.rsc.org/?DOI=c2ce26126j].
+  [Shishkin, Oleg V., Volodymyr V. Medvediev, and Roman I. Zubatyuk. 2013. “Supramolecular Architecture of Molecular Crystals Possessing Shearing Mechanical Properties: Columns Versus Layers.” _CrystEngComm_ 15 (1): 160. doi:10.1039/c2ce26126j.](http://xlink.rsc.org/?DOI=c2ce26126j)
 
-EVD of crystal structure could be constructed starting from proper  [http://en.wikipedia.org/wiki/Crystallographic_Information_File CIF] file with now disorder or similar shortcomingsin following steps:
+EVD of crystal structure could be constructed starting from proper  [CIF](http://en.wikipedia.org/wiki/Crystallographic_Information_File) file with now disorder or similar shortcomingsin following steps:
 
   1. Normalize of positions of hydrogen atoms
 
@@ -55,7 +55,7 @@ Start with `MyStructure.cif`
 
 ####Perform quantum-chemical calculations of interaction energies
 
-  You can prepare input files for DFT+BSSE calculations with [http://cec.mpg.de/forum/ Orca] using mkinps-orca-dim.py script (look at the script if you want to change level of theory). 
+  You can prepare input files for DFT+BSSE calculations with (ORCA)[http://cec.mpg.de/forum/] using mkinps-orca-dim.py script (look at the script if you want to change level of theory). 
 
   For each `MyStructure-d###.xyz` run:
 
