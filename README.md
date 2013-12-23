@@ -1,5 +1,5 @@
 #CMOL
-##Collection of Python scripts for Energy Vector Digram analysis of crystal structures.
+##### *Collection of Python scripts for Energy Vector Digram analysis of crystal structures.*
 
 ###Introduction
 
