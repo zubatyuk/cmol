@@ -16,7 +16,7 @@ def main(options,args):
     conv=ob.OBConversion()
     conv.SetOutFormat('xyz')
 
-    with open(basename+'.symm') as symm:
+    with open(basename+'.symm','w') as symm:
         id=0
         for id0 in xrange(len(cmol.mol_map)):
             m0=ob.OBMol()
