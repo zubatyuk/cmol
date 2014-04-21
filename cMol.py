@@ -2,8 +2,8 @@
 
 from __future__ import division
 
-import fractions import Fraction
-import libcif import parsecif, readcif
+from fractions import Fraction
+from libcif import parsecif, readcif
 import openbabel as ob
 import os
 import pybel
