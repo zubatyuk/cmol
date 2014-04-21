@@ -223,6 +223,8 @@ class cMol(object):
                         continue
                     atom = ob.OBAtom()
                     atom.SetVector(self.f2c(s.apply(self.c2f(a.GetVector()))))
+                    if a.GetVector().IsApprox(atom.GetVector(),0.01):
+                        continue
                     atom.SetAtomicNum(a.GetAtomicNum())
                     self.OBMol.AddAtom(atom)
                 self.OBMol.ConnectTheDots()
