@@ -13,8 +13,11 @@ def main(options,args):
 
     convs=ob.OBConversion()
     convs.SetOutFormat('xyz')
+    convm=ob.OBConversion()
+    convm.SetOutFormat('xyz')
     conv=ob.OBConversion()
     conv.SetOutFormat('xyz')
+
 
     with open(basename+'.symm','w') as symm:
         id=0
@@ -23,6 +26,8 @@ def main(options,args):
             for i in cmol.mol_map[id0]:
                 m0.AddAtom(cmol.atoms[i])
             ms=list()
+            convm.WriteFile(m0,'%s-m%02i.xyz' %(basename,id0))
+            convm.CloseOutFile()
             for s,id1 in cmol.iter_close(id0):
                 symm.write('%s %s %s\n' %(s,id0,id1 ))
                 id+=1
