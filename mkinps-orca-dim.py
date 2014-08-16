@@ -44,11 +44,11 @@ if __name__ == '__main__':
     #..go
     xyz_d=glob('%s-d???.xyz' %name)
     assert xyz_d, "Could not find files matching mask %s-d???.xyz" %name
-    if not bsse:
+    if not options.bsse:
         xyz_m=glob('%s-m??.xyz' %name)
         assert xyz_m, "Could not find files matching mask %s-m??.xyz" %name
     
-    if bsse:
+    if options.bsse:
         #create name-d???-m0-1.inp, name-d???-m0.inp and name-d???-m1.inp
         for xyzfile in xyz_d:
             basename=os.path.splitext(xyzfile)[0]
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                 f.writelines(mkinp_orca(mols,(1,)))
             with open(basename + '-m1.inp', 'w') as f:
                 f.writelines(mkinp_orca(mols,(0,)))
-    if not bsse:
+    if not options.bsse:
         #create name-d???.inp amd name-m??.inp
         for xyzfile in xyz_d+xyz_m:
             basename=os.path.splitext(xyzfile)[0]
