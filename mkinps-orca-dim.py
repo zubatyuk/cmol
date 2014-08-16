@@ -28,6 +28,8 @@ if __name__ == '__main__':
     usage = "%prog [-h|--help] [-b|--bsse]  <name>"
     
     description = "Script for construction of ORCA inputs from XYZ files. Optionally creates input files for BSSE correction. Reads <name>-d???.xyz and <name>-m??.xyz files."
+
+    parser = OptionParser(usage=usage, description=description)
     
     # parser.add_option
     parser.add_option('-b', '--bsse', action="store_true", dest='bsse', help='Flag to create input files for BSSE correction.', default=False)
