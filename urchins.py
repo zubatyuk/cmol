@@ -89,10 +89,11 @@ def main(options, args):
             atom.SetAtomicNum(1)
             atom.SetVector(cmol.f2c(vectors[i]))
             mol.OBMol.AddAtom(atom)
+        for i in xrange(len(vectors)):
             bond = pybel.ob.OBBond()
-            # bond.SetBondOrder=1
-            bond.SetBegin(mol.atoms[i + len(centers)].OBAtom)
-            bond.SetEnd = atom
+            bond.SetBegin(mol.atoms[symm[i][1]].OBAtom)
+            bond.SetEnd(mol.atoms[i + len(centers)].OBAtom)
+            bond.SetBondOrder=1
             mol.OBMol.AddBond(bond)
         mol.write('mol2', basename + '.mol2', overwrite=True)
 
