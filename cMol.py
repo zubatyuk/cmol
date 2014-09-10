@@ -7,8 +7,6 @@ from libcif import parsecif, readcif
 import openbabel as ob
 import os
 import pybel
-import re
-import sympy
 import sys
 import types
 
@@ -46,79 +44,59 @@ def printvec(v):
     return str((v.GetX(), v.GetY(), v.GetZ()))
 
 class SymOp:
-    def __init__(self, r=ob.transform3d(1), t=ob.vector3(0, 0, 0)):
-        self.T = ob.vector3(0, 0, 0)
+    def __init__(self,r=ob.transform3d(1),t=ob.vector3(0,0,0)):
+        self.T=ob.vector3(0,0,0)
         if type(r) is types.StringType:
             self.set_from_str(r)
         else:
-            self.R = r
+            self.R=r
         self.add_trans(t)
 
-    def __eq__(self, other):
-        assert type(other) == type(self)
-        v1 = self.apply(ob.vector3(.1, .2, .3))
-        v2 = other.apply(ob.vector3(.1, .2, .3))
-        if v1.IsApprox(v2, 0.01):
-            return True
-        else:
-            return False
-
+    def __eq__(self,other):
+        assert type(other)==type(self), '%s is not %s !' %(type(other),type(self))
+        return self.R.DescibeAsString() == other.R.DescibeAsString() and \
+               self.T.IsApprox(other.T,0.01)
+            
     def __repr__(self):
-        re1 = re.compile('([+-]?[xyz])+')
-        re2 = re.compile('([-+]?(\d+(\.\d*)?|\.\d+))')
-        s = self.R.DescribeAsString().split(',')
-        t = (self.T.GetX(), self.T.GetY(), self.T.GetZ())
-        (x, y, z) = t
-        st = [eval(i) for i in s]
-        r = list()
-        for ii in [str(t[i] + sympy.expand(s[i] + '+1.0-1.0')) for i in (0, 1, 2)]:
-            # print '>',ii
-            ii = ii.replace(' ', '')
-            m2 = re2.search(ii)
-            # print '>>', re1.search(ii).group(0)
-            if m2:
-                f = Fraction.from_float(float(m2.group(0))).limit_denominator(6)
-                if f.denominator == 1:
-                    ii = str(f.numerator) + re1.search(ii).group(0)
-                else:
-                    ii = '%i/%i' % (f.numerator, f.denominator) + re1.search(ii).group(0)
-            ii = re.sub('(\d)([xyz])', lambda x: x.group(1) + '+' + x.group(2), ii)
-            ii = re.sub('^\+', '', ii)
-            r.append(ii)
-        return ','.join(r)
-
-    def is_identity(self):
-        v0 = ob.vector3(.1, .2, .3)
-        v = self.apply(v0)
-        if v.IsApprox(v0, 0.01):
-            return True
-        return False
-
-    def set_from_str(self, s):
-        assert type(s) is types.StringType, 's is not string: %s' % s
-        assert 'x' in s and 'y' in s and 'z' in s, 's sould containt x,y,z: %s' % s
-        c1 = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
-        v1 = [eval(s) for (x, y, z) in c1]
-        (x, y, z) = (0, 0, 0)
-        v0 = eval(s)
-        v = [(v1[0][i] - v0[i], v1[1][i] - v0[i], v1[2][i] - v0[i]) for i in xrange(3)]
-        vi = [int(i) for i in v0]
-        vt = [i - int(i) for i in v0]
-        vec = [ob.vector3(i, j, k) for (i, j, k) in v]
-        self.R = ob.transform3d(vec[0], vec[1], vec[2], ob.vector3(vt[0], vt[1], vt[2]))
-        self.T = ob.vector3(vi[0], vi[1], vi[2])
-
-    def add_trans(self, t):
-        '''TODO: sanity check
-        '''
-        self.T += t
-
-    def set_trans(self, t):
-        self.T = t
-
-    def apply(self, v):
-        res = self.R * v
-        res += self.T
+        #describe as 4x4 matrix
+        v=[float(i) for i in self.R.DescribeAsValues().split()]
+        #construct representation of symmetry operation without translations
+        s=ob.transform3d(ob.vector3(v[0],v[1],v[2]),ob.vector3(v[4],v[5],v[6]), 
+               ob.vector3(v[8],v[9],v[10]),ob.vector3(0)).DescribeAsString().split(',')
+        #add translational part from 4x4 matrix to true translation from
+        #symmetry operation
+        t=[v[3]+self.T.GetX(),v[7]+self.T.GetY(),v[11]+self.T.GetZ()]
+        #construct scring
+        for i in xrange(3):
+            t[i]=str(Fraction.from_float(t[i]).limit_denominator(6))
+            t[i]+='+'+s[i]
+            t[i]=t[i].replace('+-','-')
+        return ','.join(t)
+        
+    def set_from_str(self,s):
+        assert type(s) is types.StringType, 's is not string: %s' %s
+        assert 'x' in s and 'y' in s and 'z' in s, 's sould containt x,y,z: %s' %s
+        c1=((1,0,0),(0,1,0),(0,0,1))
+        v1=[eval(s) for (x,y,z) in c1]
+        (x,y,z)=(0,0,0)
+        v0=eval(s)
+        v=[(v1[0][i]-v0[i],v1[1][i]-v0[i],v1[2][i]-v0[i]) for i in xrange(3)]
+        vt=[i-int(i) for i in v0]
+        vec=[ob.vector3(i,j,k) for (i,j,k) in v]
+        self.R=ob.transform3d(vec[0],vec[1],vec[2],ob.vector3(vt[0],vt[1],vt[2]))
+        rt=self.R.DescribeAsValues().split()
+        rt=(float(rt[4]),float(rt[7]),float(rt[11]))
+        self.T=ob.vector3(v0[0]-rt[0],v0[1]-rt[1],v0[2]-rt[2])
+        
+    def add_trans(self,t):
+        self.T+=t
+    
+    def set_trans(self,t):
+        self.T=t
+        
+    def apply(self,v):
+        res=self.R*v
+        res+=self.T
         return res
 
 class cMol(object):
