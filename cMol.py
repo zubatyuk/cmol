@@ -125,7 +125,7 @@ class cMol(object):
 
         self.norm_h()
         self.separate(separate_args)
-        # self.move_to_center()
+        self.move_to_center()
 
         self.vc = [a.GetVector() for a in self.atoms]
         self.vf = [self.c2f(v) for v in self.vc]
@@ -165,10 +165,12 @@ class cMol(object):
            vc.append(int(i))
        t = ob.vector3(vc[0], vc[1], vc[2])
        if not t.IsApprox(ob.vector3(0, 0, 0), 0.001):
-            print "WARNING: moving!"
-            for atom in self.atoms:
-                v = atom.GetVector()
-                v -= t
+            print "WARNING: moving by [ %4.1f %4.1f %4.1f ]" %(vc[0], vc[1], vc[2])
+            tc=self.f2c(t)
+            for i in xrange(self.OBMol.NumAtoms()):
+                atom=self.OBMol.GetAtom(i+1)
+                v = ob.vector3(atom.GetX(), atom.GetY(), atom.GetZ()) #wtf! GetVector fails with segfault
+                v -= tc
                 atom.SetVector(v)
     @property
     def atoms(self):
