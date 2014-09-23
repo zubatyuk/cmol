@@ -71,22 +71,38 @@ class SymOp:
             t[i]=str(Fraction.from_float(t[i]).limit_denominator(6))
             t[i]+='+'+s[i]
             t[i]=t[i].replace('+-','-')
+            if t[i].startswith('0'):
+                t[i]=t[i][1:]
+            if t[i].startswith('+'):
+                t[i]=t[i][1:]
         return ','.join(t)
         
     def set_from_str(self,s):
         assert type(s) is types.StringType, 's is not string: %s' %s
         assert 'x' in s and 'y' in s and 'z' in s, 's sould containt x,y,z: %s' %s
-        c1=((1,0,0),(0,1,0),(0,0,1))
-        v1=[eval(s) for (x,y,z) in c1]
         (x,y,z)=(0,0,0)
-        v0=eval(s)
-        v=[(v1[0][i]-v0[i],v1[1][i]-v0[i],v1[2][i]-v0[i]) for i in xrange(3)]
-        vt=[i-int(i) for i in v0]
-        vec=[ob.vector3(i,j,k) for (i,j,k) in v]
-        self.R=ob.transform3d(vec[0],vec[1],vec[2],ob.vector3(vt[0],vt[1],vt[2]))
-        rt=self.R.DescribeAsValues().split()
-        rt=(float(rt[4]),float(rt[7]),float(rt[11]))
-        self.T=ob.vector3(v0[0]-rt[0],v0[1]-rt[1],v0[2]-rt[2])
+        s0=eval(s)
+        vt2=[int(i) for i in s0]
+        vt1=[s0[i]-vt2[i] for i in range(3)]
+        r=list()
+        for (x,y,z) in ((1,0,0),(0,1,0),(0,0,1)):
+            s1=eval(s)
+            r.append([s1[i]-s0[i] for i in range(3)])
+        self.R=ob.transform3d(ob.vector3(r[0][0],r[1][0],r[2][0]),
+                              ob.vector3(r[0][1],r[1][1],r[2][1]),
+                              ob.vector3(r[0][2],r[1][2],r[2][2]),
+                              ob.vector3(vt1[0],vt1[1],vt1[2]))
+        r1=[float(i) for i in self.R.DescribeAsValues().split()]
+        self.T=ob.vector3(s0[0]-r1[3],s0[1]-r1[7],s0[2]-r1[11])
+        print map(list,zip(*r)),vt1,vt2,s
+        assert str(self) == s
+
+    def is_identity(self):
+        v0=ob.vector3(.1,.2,.3)
+        v=self.apply(v0)
+        if v.IsApprox(v0,0.01):
+            return True
+        return False
         
     def add_trans(self,t):
         self.T+=t

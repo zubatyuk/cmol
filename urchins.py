@@ -76,17 +76,19 @@ def main(options, args):
         v += v0
         vectors.append(v)
 
-    # write mol2
-    if options.mol2:
+    # write pdb
+    if options.pdb:
         mol = pybel.Molecule(pybel.ob.OBMol())
+        mol.OBMol.CloneData(cmol.OBMol.GetData(pybel.ob.UnitCell))
         for c in centers:
             atom = pybel.ob.OBAtom()
-            atom.SetAtomicNum(6)
+            atom.SetAtomicNum(0)
             atom.SetVector(cmol.f2c(c))
             mol.OBMol.AddAtom(atom)
         for i in xrange(len(vectors)):
             atom = pybel.ob.OBAtom()
-            atom.SetAtomicNum(1)
+            atom.SetAtomicNum(0)
+            atom.SetType('xx1')
             atom.SetVector(cmol.f2c(vectors[i]))
             mol.OBMol.AddAtom(atom)
         for i in xrange(len(vectors)):
@@ -95,7 +97,14 @@ def main(options, args):
             bond.SetEnd(mol.atoms[i + len(centers)].OBAtom)
             bond.SetBondOrder=1
             mol.OBMol.AddBond(bond)
-        mol.write('mol2', basename + '.mol2', overwrite=True)
+        mol.write('pdb', basename + '.pdb', overwrite=True)
+        for i in xrange(cmol.OBMol.NumAtoms()):
+            mol.OBMol.AddAtom(cmol.OBMol.GetAtom(i+1))
+        for i in xrange(cmol.OBMol.NumBonds()):
+            b=cmol.OBMol.GetBond(i)
+            mol.OBMol.AddBond(b.GetBeginAtomIdx()+len(centers)+len(vectors),
+                              b.GetEndAtomIdx()+len(centers)+len(vectors),1)
+        mol.write('pdb', basename + '_c.pdb', overwrite=True)
 
     # write res
     if options.res:
@@ -120,13 +129,13 @@ def main(options, args):
 if __name__ == '__main__':
     from optparse import OptionParser
 
-    usage = "%prog [-h|--help] [-m|--mol2] [-r|--res] <name>"
-    description = "Script for constructions of EVD. Reads files <name>.cif, <name>.symm and <name>.ene. Writes MOL2 or SHELX RES files."
+    usage = "%prog [-h|--help] [-p|--pdb] [-r|--res] <name>"
+    description = "Script for constructions of EVD. Reads files <name>.cif, <name>.symm and <name>.ene. Writes PDB or SHELX RES files."
 
     parser = OptionParser(usage=usage, description=description)
 
     # parser.add_option
-    parser.add_option('-m', '--mol2', dest='mol2', help='Write MOL2 file', action='store_true')
+    parser.add_option('-p', '--pdb', dest='pdb', help='Write PDB file', action='store_true')
     parser.add_option('-r', '--res', dest='res', help='Write SHELX RES file', action='store_true')
 
     (options, args) = parser.parse_args()
@@ -134,8 +143,8 @@ if __name__ == '__main__':
     # arg checks
     if not len(args) == 1:
         parser.error('Single argument <name> required.\nGet more help with -h option.')
-    if not (options.mol2 or options.res):
-        parser.error('Nothing to do. Specify either -mol2 or -res')
+    if not (options.pdb or options.res):
+        parser.error('Nothing to do. Specify either --pdb or --res')
 
     for ext in ('cif', 'symm', 'ene'):
         f = args[0] + '.' + ext
