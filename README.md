@@ -7,13 +7,17 @@ Energy Vector Diagram method provides _ab initio_ methodology for analysis of in
 
 For details see:
 
-  [Dyakonenko, Viktoriya V., Andrey V. Maleev, Alexander I. Zbruyev, Valentin A. Chebanov, Sergey M. Desenko, and Oleg V. Shishkin. 2010. “Layered Crystal Structure of Bicyclic Aziridines as Revealed by Analysis of Intermolecular Interactions Energy.” _CrystEngComm_ 12 (6): 1816. doi:10.1039/b922131j.](http://xlink.rsc.org/?DOI=b922131j)
+  [Zubatyuk, R. I.; Sinelshchikova, A. A.; Enakieva, Y. Y.; Gorbunova, Y. G.; Tsivadze, A. Y.; Nefedov, S. E.; Bessmertnykh-Lemeune, A.; Guilard, R.; Shishkin, O. V. Insights into the crystal packing of phosphorylporphyrins based on the topology of their intermolecular interaction energies. CrystEngComm 2014, 16, 10428–10438.](http://xlink.rsc.org/?DOI=C4CE01623H)
 
-  [Shishkin, Oleg V., Volodymyr V. Medvediev, Roman I. Zubatyuk, Olena O. Shyshkina, Nataliya V. Kovalenko, and Julian M. Volovenko. 2012. “Role of Different Molecular Fragments in Formation of the Supramolecular Architecture of the Crystal of 1,1-Dioxo-Tetrahydro-1λ6-Thiopyran-3-One.” _CrystEngComm_ 14 (24): 8698. doi:10.1039/c2ce26332g.](http://xlink.rsc.org/?DOI=c2ce26332g)
+  [Shishkin, O. V; Zubatyuk, R. I.; Shishkina, S. V; Dyakonenko, V. V; Medviediev, V. V. Role of supramolecular synthons in the formation of the supramolecular architecture of molecular crystals revisited from an energetic viewpoint. Phys. Chem. Chem. Phys. 2014, 16, 6773–6786.](http://dx.doi.org/10.1039/c3cp55390f)
 
-  [Yufit, Dmitry S., Roman Zubatyuk, Oleg V. Shishkin, and Judith a. K. Howard. 2012. “Low-Melting Molecular Complexes. Halogen Bonds in Molecular Complexes of Bromoform.” _CrystEngComm_ 14 (23): 8222. doi:10.1039/c2ce26191j.](http://xlink.rsc.org/?DOI=c2ce26191j)
+  [Yufit, D. S.; Shishkin, O. V.; Zubatyuk, R. I.; Howard, J. A. K. Trimethyltrioxane (Paraldehyde) and Its Halomethanes Complexes: Crystallization, Structures, and Analysis of Packing Motifs. Cryst. Growth Des. 2014, 14, 4303–4309.](http://dx.doi.org/10.1021/cg500354t)
 
-  [Shishkin, Oleg V., Volodymyr V. Medvediev, and Roman I. Zubatyuk. 2013. “Supramolecular Architecture of Molecular Crystals Possessing Shearing Mechanical Properties: Columns Versus Layers.” _CrystEngComm_ 15 (1): 160. doi:10.1039/c2ce26126j.](http://xlink.rsc.org/?DOI=c2ce26126j)
+  [Shishkin, O. V.; Medvediev, V. V.; Zubatyuk, R. I. Supramolecular architecture of molecular crystals possessing shearing mechanical properties: columns versus layers. CrystEngComm 2013, 15, 160–167.](http://xlink.rsc.org/?DOI=c2ce26126j)
+
+  [Yufit, D. S.; Zubatyuk, R.; Shishkin, O. V.; Howard, J. a. K. Low-melting molecular complexes. Halogen bonds in molecular complexes of bromoform. CrystEngComm 2012, 14, 8222.](http://xlink.rsc.org/?DOI=c2ce26191j)
+
+  [Shishkin, O. V.; Medvediev, V. V.; Zubatyuk, R. I.; Shyshkina, O. O.; Kovalenko, N. V.; Volovenko, J. M. Role of different molecular fragments in formation of the supramolecular architecture of the crystal of 1,1-dioxo-tetrahydro-1λ6-thiopyran-3-one. CrystEngComm 2012, 14, 8698.](http://xlink.rsc.org/?DOI=c2ce26332g)
 
 EVD of crystal structure could be constructed starting from proper  [CIF](http://en.wikipedia.org/wiki/Crystallographic_Information_File) file with now disorder or similar shortcomingsin following steps:
 
