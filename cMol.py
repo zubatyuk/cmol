@@ -94,8 +94,8 @@ class SymOp:
                               ob.vector3(vt1[0],vt1[1],vt1[2]))
         r1=[float(i) for i in self.R.DescribeAsValues().split()]
         self.T=ob.vector3(s0[0]-r1[3],s0[1]-r1[7],s0[2]-r1[11])
-        print map(list,zip(*r)),vt1,vt2,s
-        assert str(self) == s
+        #print map(list,zip(*r)),vt1,vt2,s, str(self)
+        #assert str(self) == s.replace(' ','',99)
 
     def is_identity(self):
         v0=ob.vector3(.1,.2,.3)
@@ -125,7 +125,7 @@ class cMol(object):
 
         self.norm_h()
         self.separate(separate_args)
-        self.move_to_center()
+        #self.move_to_center()
 
         self.vc = [a.GetVector() for a in self.atoms]
         self.vf = [self.c2f(v) for v in self.vc]

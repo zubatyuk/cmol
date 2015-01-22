@@ -37,8 +37,6 @@ EVD of crystal structure could be constructed starting from proper  [CIF](http:/
   
   Openbabel Python module : [http://sourceforge.net/projects/openbabel/files/openbabel-python/1.8/openbabel-python-1.8.py27.exe/download]
   
-  SymPy library : [https://code.google.com/p/sympy/downloads/detail?name=sympy-0.7.2.win32.exe]
-
 ###Typical usage
 
 Start with `MyStructure.cif`
@@ -57,29 +55,16 @@ Start with `MyStructure.cif`
 
 ####Perform quantum-chemical calculations of interaction energies
 
-  You can prepare input files for DFT+BSSE calculations with (ORCA)[http://cec.mpg.de/forum/] using mkinps-orca-dim.py script (look at the script if you want to change level of theory). 
+  You can prepare input files for DFT+BSSE calculations with (ORCA)[http://cec.mpg.de/forum/] using mkinps-orca-dim.py script. 
 
-  For each `MyStructure-d###.xyz` run:
+    `mkinps-orca-dim.py -b -r '!b97-d3 tzvp tzvp/j nososcf' MyStructure`
 
-  `mkinps-orca-dim.py MyStructure-d001.xyz`
+####Run calculations. You can extract interaction energies with geten_orca.py bash script. This will generate list on interaction energies in MyStructure.ene file.
 
-  More conveniently, using batch command in Windows:
-  
-  `for %f in (MyStructure-d???.xyz); do mkinps-orca-dim.py %f`
-
-  or in bash:
-
-  `for f in MyStructure-d???.xyz; do mkinps-orca-dim.py $f; done`
-
-####Run calculations. You can extract interaction energies with geten-bsse.sh bash script 
-
-  `geten-bsse.sh MyStructure |awk '{print $2}' > MyStructure.ene`
+  `geten_orca.py -b MyStructure`
    
 ####Build EVDs
 
-  `urchins.py -m MyStructure` will read MySTructure.cif MyStructure.symm and MyStructure.ene files and output MOL2 file suitable for viewing with Mercury. 
+  `urchins.py MyStructure` will read MySTructure.cif MyStructure.symm and MyStructure.ene files and output PDB file suitable for viewing with Mercury. 
   
-  Did not found any better way to put unit cell and symmetry operations in MOL2 file except open CIF in Mercury, save to a temporary MOL2 file and just copy two last lines from that file.
-
-
   

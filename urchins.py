@@ -2,19 +2,10 @@
 
 from cMol import *
 import os
-import pybel
+import openbabel as ob
 import sys
 import types
 
-
-def calc_center(vecs):
-    center = pybel.ob.vector3(0, 0, 0)
-    l = 0
-    for v in vecs:
-        center += v
-        l += 1
-    center /= l
-    return center
 
 def read_symm(fil):
     assert os.path.isfile(fil), "File not found: %s" % fil
@@ -49,21 +40,22 @@ def read_ene(fil):
         ene.append(i)
     return ene
 
-def resfile_atom(name, ntype, x, y, z):
-    return '%-4s %1i %7.4f %7.4f %7.4f 1.0 0.05\n' % (name, ntype, x, y, z)
+def calc_center(vecs):
+    center = pybel.ob.vector3(0, 0, 0)
+    l = 0
+    for v in vecs:
+        center += v
+        l += 1
+    center /= l
+    return center
 
-def main(options, args):
-    basename = args[0]
-    symm = read_symm(basename + '.symm')
-    ene = read_ene(basename + '.ene')
-    assert len(symm) == len(ene), "Different number of records in symm and ene files!"
-    cmol = read_cmol(basename)
-
+def get_evd_centers(cmol):
     centers = list()
     for m in cmol.mol_map:
         centers.append(calc_center([cmol.c2f(cmol.atoms[a].GetVector()) for a in m]))
+    return centers
 
-    # calculate vectors
+def get_evd_vectors(centers,symm,ene):
     vectors = list()
     en_scale = 1 / float(2 * min(ene))
     for i in xrange(len(symm)):
@@ -75,76 +67,77 @@ def main(options, args):
         v *= (en_scale * e)
         v += v0
         vectors.append(v)
+    return vectors
 
-    # write pdb
-    if options.pdb:
-        mol = pybel.Molecule(pybel.ob.OBMol())
-        mol.OBMol.CloneData(cmol.OBMol.GetData(pybel.ob.UnitCell))
+def make_evd_struct(cmol,centers,vectors,symm,evd=True,mol=True):
+    evdmol = ob.OBMol()
+    evdmol.CloneData(cmol.OBMol.GetData(ob.UnitCell))
+    if mol:
+        for m in cmol.mol_map:
+            for i in m:
+                evdmol.AddAtom(cmol.OBMol.GetAtom(i+1))
+        evdmol.ConnectTheDots()
+    if evd:
+        nat=evdmol.NumAtoms()
         for c in centers:
-            atom = pybel.ob.OBAtom()
+            atom = ob.OBAtom()
             atom.SetAtomicNum(0)
             atom.SetVector(cmol.f2c(c))
-            mol.OBMol.AddAtom(atom)
+            evdmol.AddAtom(atom)
         for i in xrange(len(vectors)):
-            atom = pybel.ob.OBAtom()
+            atom = ob.OBAtom()
             atom.SetAtomicNum(0)
-            atom.SetType('xx1')
             atom.SetVector(cmol.f2c(vectors[i]))
-            mol.OBMol.AddAtom(atom)
+            evdmol.AddAtom(atom)
         for i in xrange(len(vectors)):
-            bond = pybel.ob.OBBond()
-            bond.SetBegin(mol.atoms[symm[i][1]].OBAtom)
-            bond.SetEnd(mol.atoms[i + len(centers)].OBAtom)
+            bond = ob.OBBond()
+            bond.SetBegin(evdmol.GetAtom(symm[i][1]+nat+1))
+            bond.SetEnd(evdmol.GetAtom(i+len(centers)+nat+1))
             bond.SetBondOrder=1
-            mol.OBMol.AddBond(bond)
-        mol.write('pdb', basename + '.pdb', overwrite=True)
-        for i in xrange(cmol.OBMol.NumAtoms()):
-            mol.OBMol.AddAtom(cmol.OBMol.GetAtom(i+1))
-        for i in xrange(cmol.OBMol.NumBonds()):
-            b=cmol.OBMol.GetBond(i)
-            mol.OBMol.AddBond(b.GetBeginAtomIdx()+len(centers)+len(vectors),
-                              b.GetEndAtomIdx()+len(centers)+len(vectors),1)
-        mol.write('pdb', basename + '_c.pdb', overwrite=True)
+            evdmol.AddBond(bond)
+    return evdmol
 
-    # write res
-    if options.res:
-        with open(basename + '.res', 'w') as resfile:
-            for i in xrange(len(centers)):
-                (x, y, z) = (centers[i].GetX(), centers[i].GetY(), centers[i].GetZ())
-                idx = i
-                resfile.write(resfile_atom('M%i' % idx, 1, x, y, z))
-            for i in xrange(len(vectors)):
-                (x, y, z) = (vectors[i].GetX(), vectors[i].GetY(), vectors[i].GetZ())
-                idx = i + len(centers)
-                resfile.write(resfile_atom('M%i' % idx, 2, x, y, z))
-            resfile.write('END\n')
-            resfile.write('FMOL\n')
-            resfile.write('UNDO\n')
-            for i in xrange(len(symm)):
-                resfile.write('link 1 m%i m%i\n' % (symm[i][1], len(centers) + i))
-            resfile.write('END\n')
+def writepdb(mol,filename):
+    obconversion = ob.OBConversion()
+    formatok = obconversion.SetOutFormat('pdb')
+    obconversion.WriteFile(mol,filename)
+    obconversion.CloseOutFile()
+
+def main(options, args):
+    basename = args[0]
+    symm = read_symm(basename + '.symm')
+    ene = read_ene(basename + '.ene')
+    assert len(symm) == len(ene), "Different number of records in symm and ene files!"
+    cmol = read_cmol(basename)
+
+    centers = get_evd_centers(cmol)
+    vectors = get_evd_vectors(centers,symm,ene)
+
+    #molecule
+    mol=make_evd_struct(cmol,centers,vectors,symm,evd=False,mol=True)
+    writepdb(mol,basename+'_m.pdb')
+    #molrecule+evd
+    mol=make_evd_struct(cmol,centers,vectors,symm,evd=True,mol=True)
+    writepdb(mol,basename+'_c.pdb')
+    #evd
+    mol=make_evd_struct(cmol,centers,vectors,symm,evd=True,mol=False)
+    writepdb(mol,basename+'.pdb')
 
     sys.exit(0)
 
 if __name__ == '__main__':
     from optparse import OptionParser
 
-    usage = "%prog [-h|--help] [-p|--pdb] [-r|--res] <name>"
-    description = "Script for constructions of EVD. Reads files <name>.cif, <name>.symm and <name>.ene. Writes PDB or SHELX RES files."
+    usage = "%prog [-h|--help] <name>"
+    description = "Script for constructions of EVD. Reads files <name>.cif, <name>.symm and <name>.ene. Writes PDB files."
 
     parser = OptionParser(usage=usage, description=description)
-
-    # parser.add_option
-    parser.add_option('-p', '--pdb', dest='pdb', help='Write PDB file', action='store_true')
-    parser.add_option('-r', '--res', dest='res', help='Write SHELX RES file', action='store_true')
 
     (options, args) = parser.parse_args()
 
     # arg checks
     if not len(args) == 1:
         parser.error('Single argument <name> required.\nGet more help with -h option.')
-    if not (options.pdb or options.res):
-        parser.error('Nothing to do. Specify either --pdb or --res')
 
     for ext in ('cif', 'symm', 'ene'):
         f = args[0] + '.' + ext
@@ -153,5 +146,6 @@ if __name__ == '__main__':
 
     # go..
     main(options, args)
+
 
 
