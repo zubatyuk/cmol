@@ -63,7 +63,7 @@ Start with `MyStructure.cif`
 
     `mkinps-orca-dim.py -b -r '!b97-d3 tzvp tzvp/j nososcf' MyStructure`
 
-####Run calculations. You can extract interaction energies with geten_orca.py bash script. This will generate list on interaction energies in MyStructure.ene file.
+Run calculations. You can extract interaction energies with geten_orca.py bash script. This will generate list on interaction energies in MyStructure.ene file.
 
   `geten_orca.py -b MyStructure`
    
